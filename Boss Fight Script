@@ -1,0 +1,88 @@
+local TweenService = game:GetService("TweenService")
+
+local monster = game.Workspace.Monster
+
+local function fireballChallenge()
+
+	for i=1,3 do
+
+		for i,player in pairs(game.Players:GetPlayers()) do
+			if player.Character then
+				local fireball = game.ReplicatedStorage.Fireball:Clone()
+				local target = game.ReplicatedStorage.Target:Clone()
+
+				target.Parent = game.Workspace
+				target.CFrame = (player.Character.HumanoidRootPart.CFrame - Vector3.new(0,3,0)) * CFrame.Angles(0,0,math.rad(90))
+
+				wait(0.5)
+
+				fireball.Parent = game.Workspace
+				fireball.CFrame = target.CFrame + Vector3.new(0,60,0)
+
+				wait(2)
+
+				target:Destroy()
+
+			end
+		end
+		wait(1)
+
+	end
+
+end
+
+local function lavaChallenge()
+
+	local tweenInfo = TweenInfo.new(2)
+
+	local goalPlatformUp = {}
+	goalPlatformUp.CFrame = game.Workspace.Platforms.goalPositionPart.CFrame
+	local movePlatformUpTween = TweenService:Create(game.Workspace.Platforms.Handle, tweenInfo, goalPlatformUp)
+
+	movePlatformUpTween:Play()
+
+	wait(2)
+
+	local goalLavaUp = {}
+	goalLavaUp.CFrame = game.Workspace.Lava.goalPositionPart.CFrame
+	local moveLavaUpTween = TweenService:Create(game.Workspace.Lava.Handle, tweenInfo, goalLavaUp)
+
+	moveLavaUpTween:Play()
+
+	wait(7)
+
+	local goalLavaDown = {}
+	goalLavaDown.CFrame = game.Workspace.Lava.goalPositionPart.CFrame - Vector3.new(0,10,0)
+	local moveLavaDownTween = TweenService:Create(game.Workspace.Lava.Handle, tweenInfo, goalLavaDown)
+
+	moveLavaDownTween:Play()
+
+	wait(3)
+
+	local goalPlatformDown = {}
+	goalPlatformDown.CFrame = game.Workspace.Platforms.goalPositionPart.CFrame - Vector3.new(0,10,0)
+	local movePlatformDownTween = TweenService:Create(game.Workspace.Platforms.Handle, tweenInfo, goalPlatformDown)
+
+	movePlatformDownTween:Play()
+
+end
+
+while wait(5) do
+
+	if monster.Humanoid.Health > 0 then
+		monster.ForceField.Visible = true
+
+		lavaChallenge()
+		fireballChallenge()
+
+		monster.ForceField.Visible = false
+	else
+		break
+	end
+end
+
+wait(1)
+
+monster:Destroy()
+game.Workspace.winDoor:Destroy()
+print ("Bozo")
